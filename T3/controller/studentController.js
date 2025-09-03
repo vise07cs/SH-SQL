@@ -28,10 +28,10 @@ const addEntries=(req,res)=>{
 
 const updateEntries=(req,res)=>{
   const {id}=req.params;
-  const {name}=req.body;
+  const {name,email}=req.body;
 
-  const updateQuery=`UPDATE students SET name=? WHERE id=?`;
-  db.execute(updateQuery,[name,id],(err,result)=>{
+  const updateQuery=`UPDATE students SET name=? , email=? WHERE id=?`;
+  db.execute(updateQuery,[name,email,id],(err,result)=>{
     if(err){
       console.log("Error updating data:",err.message);
       res.status(500).send("Error updating data");
