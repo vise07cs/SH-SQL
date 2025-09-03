@@ -1,3 +1,4 @@
+const e = require("express");
 const db=require("../utils/dbConnection")
 
 
@@ -11,7 +12,7 @@ const addEntries=(req,res)=>{
     if(err){
       console.error("Error inserting data:",err.message);
       res.status(500).send("Error inserting data");
-      // connection.end();
+      db.end();
       return; 
     }
     else{
@@ -23,4 +24,31 @@ const addEntries=(req,res)=>{
 }
 
 
-module.exports={addEntries};
+
+
+const updateEntries=(req,res)=>{
+  const {id}=req.params;
+  const {name}=req.body;
+
+  const updateQuery=`UPDATE students SET name=? WHERE id=?`;
+  db.execute(updateQuery,[name,id],(err,result)=>{
+    if(err){
+      console.log("Error updating data:",err.message);
+      res.status(500).send("Error updating data");
+      db.end();
+      return;
+    }
+
+    if(result.affectedRows===0){
+      res.status(404).send("Student not found");
+    }
+    else{
+      console.log("Data updated successfully");
+      res.status(200).send("Student with id "+id+" updated successfully");
+    }
+
+  })
+}
+
+
+module.exports={addEntries,updateEntries};
